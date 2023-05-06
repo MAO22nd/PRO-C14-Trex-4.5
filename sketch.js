@@ -56,24 +56,35 @@ function setup() {
 function draw() {
   background(180);
   text("Score: "+ score, 500,50);
-  score = score + Math.round(frameCount/60);
+  
   
   if(gameState === PLAY){
     //mover o solo
     ground.velocityX = -4;
-    
+  score = score + Math.round(frameCount/60);
+    if (ground.x < 0){
+    ground.x = ground.width/2;
+  }
+     if(keyDown("space")&& trex.y >= 100) {
+    trex.velocityY = -13;
+  
+  }
+    trex.velocityY = trex.velocityY + 0.8
+   spawnClouds();
+    spawnObstacles();
+    if (obstaclesGroup.isTouching(trex)){
+      gameState = END;
+    }
   }
   else if(gameState === END){
     //parar o solo
     ground.velocityX = 0;
-  
+  obstaclesGroup.setVelocityEach(0);
+    cloudsGroup.setVelocityEach(0);
   }
   
-  if(keyDown("space")&& trex.y >= 100) {
-    trex.velocityY = -13;
-  }
+ 
   
-  trex.velocityY = trex.velocityY + 0.8
   
   if (ground.x < 0){
     ground.x = ground.width/2;
@@ -82,10 +93,10 @@ function draw() {
   trex.collide(invisibleGround);
   
   //gere as nuvens
-  spawnClouds();
+ 
   
   //gere obstáculos no solo
-  spawnObstacles();
+  
   
   drawSprites();
 }
